@@ -13,3 +13,5 @@ Route::get('/pastel/{id}', [App\Http\Controllers\PastelController::class, 'listO
 Route::get('/pastel', [App\Http\Controllers\PastelController::class, 'listAll']);
 Route::post('/pastel/atualizar/{id}', [App\Http\Controllers\PastelController::class, 'update']);
 Route::delete('/pastel/{id}', [App\Http\Controllers\PastelController::class, 'delete']);
+
+Route::get('/pastel/tipo/list', [App\Http\Controllers\TipoPastelController::class, 'listAll']);
