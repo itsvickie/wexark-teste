@@ -78,7 +78,7 @@ class ClienteController extends Controller
 
         $email = $request->input('email');
 
-        if(ClienteModel::where('email', $email)->first()) return response()->json(['message' => 'E-mail já cadastrado!']);
+        if(ClienteModel::where('email', $email)->withTrashed()->first()) return response()->json(['message' => 'E-mail já cadastrado!']);
 
         ClienteModel::create([
             'nome' => $request->input('nome'),
@@ -94,5 +94,64 @@ class ClienteController extends Controller
         ]);
 
         return response()->json(['message' => 'Cliente cadastrado com sucesso!'], 201);
+    }
+
+    public function listOne($id)
+    {
+        $cliente = ClienteModel::find($id);
+
+        if(!$cliente) return response()->json(['message' => 'Cliente informado não cadastrado!']);
+
+        $arr = [
+            'nome' => $cliente['nome'],
+            'email' => $cliente['email'],
+            'telefone' => $cliente['telefone'],
+            'data_nascimento' => $cliente['data_nascimento'],
+            'rua_endereco' => $cliente['rua_endereco'],
+            'numero_endereco' => $cliente['numero_endereco'],
+            'bairro_endereco' => $cliente['bairro_endereco'],
+            'cep_endereco' => $cliente['cep_endereco']
+        ];
+
+        if($cliente['complemento_endereco']) $arr = array_merge($arr, ['complemento_endereco' => $cliente['complemento_endereco']]);
+
+        return response()->json($arr, 200);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $cliente = ClienteModel::find($id);
+
+        if(!$cliente){
+            return response()->json(['message' => 'Cliente informado não cadastrado!'], 404);
+        }
+
+        if($request->input('nome')) $cliente->nome = $request->input('nome');
+        if($request->input('email')) $cliente->email = $request->input('email');
+        if($request->input('telefone')) $cliente->telefone = $request->input('telefone');
+        if($request->input('data_nascimento')) $cliente->data_nascimento = $request->input('data_nascimento');
+        if($request->input('senha')) $cliente->senha = Hash::make($request->input('senha'));
+        if($request->input('rua_endereco')) $cliente->rua_endereco = $request->input('rua_endereco');
+        if($request->input('numero_endereco')) $cliente->numero_endereco = $request->input('numero_endereco');
+        if($request->input('complemento_endereco')) $cliente->complemento_endereco = $request->input('complemento_endereco');
+        if($request->input('bairro_endereco')) $cliente->bairro_endereco = $request->input('bairro_endereco');
+        if($request->input('cep_endereco')) $cliente->cep_endereco = $request->input('cep_endereco');
+
+        $cliente->save();
+
+        return response()->json(['message' => 'Cliente atualizado com sucesso!'], 200);
+    }
+
+    public function delete($id)
+    {
+        $cliente = ClienteModel::find($id);
+
+        if(!$cliente){
+            return response()->json(['message' => 'Cliente informado não cadastrado!'], 404);
+        }
+
+        $cliente->delete();
+
+        return response()->json(['message' => 'Cliente excluído com sucesso!'], 200);
     }
 }

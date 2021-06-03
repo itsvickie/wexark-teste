@@ -51,3 +51,12 @@ CREATE TABLE pedido (
     FOREIGN KEY (id_cliente) REFERENCES cliente(id),
     FOREIGN KEY (id_pastel) REFERENCES pastel(id)
 );
+
+
+------------------------ 01/06/2021
+ALTER TABLE cliente DROP COLUMN status;
+ALTER TABLE pastel DROP COLUMN status;
+
+ALTER TABLE cliente ADD COLUMN deleted_at DATETIME DEFAULT NULL AFTER cep_endereco;
+ALTER TABLE pastel ADD COLUMN deleted_at DATETIME DEFAULT NULL AFTER id_tipo;
+ALTER TABLE pedido ADD COLUMN deleted_at DATETIME DEFAULT NULL AFTER id_pastel;
