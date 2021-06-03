@@ -11,7 +11,7 @@ class ClienteController extends Controller
 {
     public function create(Request $request)
     {
-        $cliente = Validator::make(
+        $validator = Validator::make(
             $request->only([
                 'nome',
                 'email',
@@ -72,9 +72,7 @@ class ClienteController extends Controller
             ]
         );
 
-        if($cliente->fails()){
-            return response()->json(['message' => $cliente->errors()->first()], 400);
-        }
+        if($validator->fails()) return response()->json(['message' => $validator->errors()->first()], 400);
 
         $email = $request->input('email');
 
@@ -102,7 +100,7 @@ class ClienteController extends Controller
 
         if(!$cliente) return response()->json(['message' => 'Cliente informado não cadastrado!']);
 
-        $arr = [
+        $res = [
             'nome' => $cliente['nome'],
             'email' => $cliente['email'],
             'telefone' => $cliente['telefone'],
@@ -113,18 +111,16 @@ class ClienteController extends Controller
             'cep_endereco' => $cliente['cep_endereco']
         ];
 
-        if($cliente['complemento_endereco']) $arr = array_merge($arr, ['complemento_endereco' => $cliente['complemento_endereco']]);
+        if($cliente['complemento_endereco']) $res = array_merge($res, ['complemento_endereco' => $cliente['complemento_endereco']]);
 
-        return response()->json($arr, 200);
+        return response()->json($res, 200);
     }
 
     public function update(Request $request, $id)
     {
         $cliente = ClienteModel::find($id);
 
-        if(!$cliente){
-            return response()->json(['message' => 'Cliente informado não cadastrado!'], 404);
-        }
+        if(!$cliente) return response()->json(['message' => 'Cliente informado não cadastrado!'], 404);
 
         if($request->input('nome')) $cliente->nome = $request->input('nome');
         if($request->input('email')) $cliente->email = $request->input('email');
@@ -146,9 +142,7 @@ class ClienteController extends Controller
     {
         $cliente = ClienteModel::find($id);
 
-        if(!$cliente){
-            return response()->json(['message' => 'Cliente informado não cadastrado!'], 404);
-        }
+        if(!$cliente) return response()->json(['message' => 'Cliente informado não cadastrado!'], 404);
 
         $cliente->delete();
 
