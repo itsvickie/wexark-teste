@@ -15,3 +15,7 @@ Route::post('/pastel/atualizar/{id}', [App\Http\Controllers\PastelController::cl
 Route::delete('/pastel/{id}', [App\Http\Controllers\PastelController::class, 'delete']);
 
 Route::get('/pastel/tipo/list', [App\Http\Controllers\TipoPastelController::class, 'listAll']);
+
+Route::post('/pedido', [App\Http\Controllers\PedidoController::class, 'create']);
+Route::get('/pedido', [App\Http\Controllers\PedidoController::class, 'listAll']);
+Route::get('/pedido/{id}', [App\Http\Controllers\PedidoController::class, 'listOne']);
