@@ -8,7 +8,6 @@ CREATE TABLE IF NOT EXISTS cliente (
     email VARCHAR(100) NOT NULL UNIQUE,
     telefone CHAR(11) NOT NULL,
     data_nascimento DATE NOT NULL,
-    senha CHAR(60) NOT NULL,
     rua_endereco VARCHAR(100) NOT NULL,
     numero_endereco INT NOT NULL,
     complemento_endereco VARCHAR(255) DEFAULT NULL,

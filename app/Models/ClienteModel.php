@@ -17,7 +17,6 @@ class ClienteModel extends Model
         'email',
         'telefone',
         'data_nascimento',
-        'senha',
         'rua_endereco',
         'numero_endereco',
         'complemento_endereco',

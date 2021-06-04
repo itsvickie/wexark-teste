@@ -61,6 +61,8 @@ class PedidoController extends Controller
     {
         $pedido = PedidoModel::where('id', $id)->first(['id_cliente', 'created_at']);
 
+        if(!$pedido) return response()->json(['message' => 'Pedido informado não cadastrado!'], 404);
+
         $pedido_pasteis = PedidoPasteisModel::where('id_pedido', $id)->get(['id_pastel']);
 
         $pasteis = PastelModel::whereIn('id', $pedido_pasteis)->get(['id', 'nome', 'preco']);

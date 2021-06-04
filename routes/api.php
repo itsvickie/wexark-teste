@@ -1,6 +1,8 @@
 <?php
 
+use App\Mail\SendMailUser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/cliente', [App\Http\Controllers\ClienteController::class, 'create']);
@@ -20,3 +22,12 @@ Route::post('/pedido', [App\Http\Controllers\PedidoController::class, 'create'])
 Route::get('/pedido', [App\Http\Controllers\PedidoController::class, 'listAll']);
 Route::get('/pedido/{id}', [App\Http\Controllers\PedidoController::class, 'listOne']);
 Route::delete('/pedido/{id}', [App\Http\Controllers\PedidoController::class, 'delete']);
+
+Route::get('/teste', function(){
+    Mail::send(new SendMailUser([
+        'name' => 'teste',
+        'email' => 'vcamilaxs@gmail.com'
+    ]));
+
+    return;
+});

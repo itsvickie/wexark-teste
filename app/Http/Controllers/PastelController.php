@@ -143,7 +143,7 @@ class PastelController extends Controller
         if($request->input('preco')) $pastel->nome = $request->input('preco');
         if($request->input('id_tipo')) $pastel->id_tipo = $request->input('id_tipo');
 
-        if($request->input('foto')){
+        if($request->file('foto')){
             $foto = $request->file('foto');
 
             $foto_nome = time() . md5($foto->getClientOriginalName()) . '.' . $foto->getClientOriginalExtension();

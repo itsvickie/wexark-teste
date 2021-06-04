@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SendMailUser;
 use App\Models\ClienteModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class ClienteController extends Controller
@@ -17,7 +19,6 @@ class ClienteController extends Controller
                 'email',
                 'telefone',
                 'data_nascimento',
-                'senha',
                 'rua_endereco',
                 'numero_endereco',
                 'complemento_endereco',
@@ -29,7 +30,6 @@ class ClienteController extends Controller
                 'email' => 'required|email|string|max:100',
                 'telefone' => 'required|string|min:11|max:11',
                 'data_nascimento' => 'required|date_format:Y-m-d|after:1900-01-01|before:today',
-                'senha' => 'required|string|min:8',
                 'rua_endereco' => 'required|string|max:100',
                 'numero_endereco' => 'required|int',
                 'complemento_endereco' => 'string|max:255',
@@ -52,9 +52,6 @@ class ClienteController extends Controller
                 'data_nascimento.date_format' => 'Data de Nascimento inválida! Formato: YYYY-mm-dd',
                 'data_nascimento.after' => 'Data de Nascimento inválida!',
                 'data_nascimento.before' => 'Data de Nascimento inválida!',
-                'senha.required' => 'O campo de Senha é obrigatório!',
-                'senha.string' => 'O campo de Senha é do tipo texto!',
-                'senha.min:8' => 'O campo de Senha deve ter no mínimo 8 caracteres!',
                 'rua_endereco.required' => 'O campo de Rua é obrigatório!',
                 'rua_endereco.string' => 'O campo de Rua é do tipo texto!',
                 'rua_endereco.max' => 'O campo de Rua deve ter no máximo 100 caracteres!',
@@ -81,7 +78,6 @@ class ClienteController extends Controller
         ClienteModel::create([
             'nome' => $request->input('nome'),
             'email' => $request->input('email'),
-            'senha' => Hash::make($request->input('senha')),
             'telefone' => $request->input('telefone'),
             'data_nascimento' => $request->input('data_nascimento'),
             'rua_endereco' => $request->input('rua_endereco'),
@@ -90,6 +86,11 @@ class ClienteController extends Controller
             'bairro_endereco' => $request->input('bairro_endereco'),
             'cep_endereco' => $request->input('cep_endereco'),
         ]);
+
+        Mail::send(new SendMailUser([
+            'name' => $request->input('nome'),
+            'email' => $request->input('email')
+        ]));
 
         return response()->json(['message' => 'Cliente cadastrado com sucesso!'], 201);
     }
