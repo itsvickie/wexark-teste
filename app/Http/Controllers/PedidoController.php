@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\ClienteModel;
+use App\Models\PastelModel;
 use App\Models\PedidoModel;
-use App\Models\PedidoPasteisController;
+use App\Models\PedidoPasteisModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -36,11 +37,15 @@ class PedidoController extends Controller
         $pasteis = $request->input('id_pasteis');
 
         foreach($pasteis as $pastel){
-            PedidoPasteisController::create([
+            PedidoPasteisModel::create([
                 'id_pedido' => $pedido['id'],
                 'id_pastel' => $pastel['id']
             ]);
         }
+
+        // Após a criação do pedido, o sistema deve disparar um email para o cliente
+        // contendo os detalhes do seu pedido.
+
 
         return response()->json(['message' => 'Pedido criado com sucesso!'], 201);
     }
@@ -56,14 +61,25 @@ class PedidoController extends Controller
     {
         $pedido = PedidoModel::where('id', $id)->first(['id_cliente', 'created_at']);
 
-        $pedido_itens = PedidoPasteisController::where('id_pedido', $id)->get(['id']);
+        $pedido_pasteis = PedidoPasteisModel::where('id_pedido', $id)->get(['id_pastel']);
 
-        $res = [
+        $pasteis = PastelModel::whereIn('id', $pedido_pasteis)->get(['id', 'nome', 'preco']);
+
+        return response()->json([
             'id_cliente' => $pedido['id_cliente'],
             'data_criacao_pedido' => $pedido['created_at'],
-            'pasteis' => $pedido_itens
-        ];
+            'pasteis_produto' => $pasteis
+        ], 200);
+    }
 
-        return response()->json($res, 200);
+    public function delete($id)
+    {
+        $pedido = PedidoModel::find($id);
+
+        if(!$pedido) return response()->json(['message' => 'Pedido informado não cadastrado!'], 404);
+
+        $pedido->delete();
+
+        return response()->json(['message' => 'Pedido excluído com sucesso!'], 200);
     }
 }

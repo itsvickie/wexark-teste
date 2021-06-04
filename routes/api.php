@@ -19,3 +19,4 @@ Route::get('/pastel/tipo/list', [App\Http\Controllers\TipoPastelController::clas
 Route::post('/pedido', [App\Http\Controllers\PedidoController::class, 'create']);
 Route::get('/pedido', [App\Http\Controllers\PedidoController::class, 'listAll']);
 Route::get('/pedido/{id}', [App\Http\Controllers\PedidoController::class, 'listOne']);
+Route::delete('/pedido/{id}', [App\Http\Controllers\PedidoController::class, 'delete']);

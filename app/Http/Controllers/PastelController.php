@@ -170,6 +170,6 @@ class PastelController extends Controller
 
         $pastel->delete();
 
-        return response()->json(['message' => 'Pastel comido com sucesso!'], 200);
+        return response()->json(['message' => 'Pastel comido com sucesso!'], 418);
     }
 }
