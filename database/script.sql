@@ -1,7 +1,3 @@
-CREATE DATABASE wexark_teste;
-
-USE wexark_teste;
-
 CREATE TABLE IF NOT EXISTS cliente (
     id INT AUTO_INCREMENT,
     nome VARCHAR(100) NOT NULL,
